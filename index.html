@@ -4,7 +4,805 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RBI - Rec Bureau of Investigation</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* Sections */
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #ee5a52;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #4ecdc4;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #45b7aa;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .btn-large {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+        }
+
+        /* Stats Section */
+        .stats {
+            background-color: white;
+            padding: 60px 20px;
+        }
+
+        .stats .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.95;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        /* Featured Section */
+        .featured-section {
+            padding: 60px 20px;
+            background-color: #f4f4f4;
+        }
+
+        .featured-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1a237e;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .case-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .case-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .case-status.active {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .case-status.solved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .case-card h3 {
+            color: #1a237e;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .case-card p {
+            color: #666;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .read-more:hover {
+            color: #ee5a52;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1a1a1a;
+            color: #ccc;
+            padding: 40px 20px 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #4ecdc4;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            color: #999;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background-color: white;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box, .filter-select {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .search-box:focus, .filter-select:focus {
+            outline: none;
+            border-color: #0d47a1;
+            box-shadow: 0 0 5px rgba(13, 71, 161, 0.3);
+        }
+
+        /* Cases Section */
+        .cases-section {
+            padding: 60px 20px;
+        }
+
+        /* Form Styles */
+        .form-section {
+            padding: 60px 20px;
+        }
+
+        .form-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .form-info h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .form-info p {
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .report-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 2rem;
+            background-color: #f9f9f9;
+        }
+
+        legend {
+            padding: 0 10px;
+            font-weight: bold;
+            color: #1a237e;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #0d47a1;
+            box-shadow: 0 0 5px rgba(13, 71, 161, 0.3);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 0.3rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group.checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .form-group.checkbox input {
+            width: auto;
+            margin-top: 5px;
+        }
+
+        .form-group.checkbox label {
+            margin-bottom: 0;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* Videos Section */
+        .channel-promo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .promo-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .promo-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .videos-section {
+            padding: 60px 20px;
+        }
+
+        .videos-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1a237e;
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-thumbnail iframe {
+            width: 100%;
+            height: 220px;
+            border: none;
+        }
+
+        .video-info {
+            padding: 1.5rem;
+        }
+
+        .video-info h3 {
+            color: #1a237e;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-info p {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .playlist-section {
+            background-color: #f4f4f4;
+            padding: 60px 20px;
+        }
+
+        .playlist-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1a237e;
+        }
+
+        .playlists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .playlist-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .playlist-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .playlist-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .playlist-card h3 {
+            color: #1a237e;
+            margin-bottom: 0.5rem;
+        }
+
+        .playlist-card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .playlist-card a {
+            color: #4ecdc4;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .playlist-card a:hover {
+            color: #0d47a1;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 60px 20px;
+        }
+
+        .about-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-content h2 {
+            color: #1a237e;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+        }
+
+        .about-content p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .about-content h3 {
+            color: #1a237e;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .mission-values {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .value-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .value-card h4 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 60px 20px;
+        }
+
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-info {
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-info h2 {
+            color: #1a237e;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .contact-item {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-item h3 {
+            color: #1a237e;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .contact-item p {
+            color: #666;
+            margin: 0.3rem 0;
+        }
+
+        .contact-form-section {
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-form-section h2 {
+            color: #1a237e;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .contact-form-section form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-form-section input, .contact-form-section textarea {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .contact-form-section input:focus, .contact-form-section textarea:focus {
+            outline: none;
+            border-color: #0d47a1;
+            box-shadow: 0 0 5px rgba(13, 71, 161, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .featured-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .form-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+            }
+
+            .search-box, .filter-select {
+                min-width: auto;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -15,87 +813,528 @@
                 <p>Rec Bureau of Investigation</p>
             </div>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="cases.html">Cases</a></li>
-                <li><a href="submit-report.html">Submit Report</a></li>
-                <li><a href="videos.html">Videos</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a onclick="showSection('home')">Home</a></li>
+                <li><a onclick="showSection('cases')">Cases</a></li>
+                <li><a onclick="showSection('report')">Submit Report</a></li>
+                <li><a onclick="showSection('videos')">Videos</a></li>
+                <li><a onclick="showSection('about')">About</a></li>
+                <li><a onclick="showSection('contact')">Contact</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Welcome to the Rec Bureau of Investigation</h1>
-            <p>Dedicated to Justice, Truth, and Public Safety</p>
-            <div class="hero-buttons">
-                <a href="submit-report.html" class="btn btn-primary">Submit a Report</a>
-                <a href="cases.html" class="btn btn-secondary">View Cases</a>
+    <!-- HOME SECTION -->
+    <section id="home" class="active">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <h1>Welcome to the Rec Bureau of Investigation</h1>
+                <p>Dedicated to Justice, Truth, and Public Safety</p>
+                <div class="hero-buttons">
+                    <a onclick="showSection('report')" class="btn btn-primary">Submit a Report</a>
+                    <a onclick="showSection('cases')" class="btn btn-secondary">View Cases</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats">
+            <div class="container">
+                <div class="stat-card">
+                    <h3>Cases Active</h3>
+                    <p class="stat-number">247</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Cases Solved</h3>
+                    <p class="stat-number">1,893</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Reports Received</h3>
+                    <p class="stat-number">5,642</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Team Members</h3>
+                    <p class="stat-number">156</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Cases -->
+        <div class="featured-section">
+            <div class="container">
+                <h2>Featured Cases</h2>
+                <div class="cases-grid">
+                    <div class="case-card">
+                        <div class="case-status active">ACTIVE</div>
+                        <h3>The Downtown Heist</h3>
+                        <p><strong>Opened:</strong> January 15, 2024</p>
+                        <p><strong>Description:</strong> Investigating a series of coordinated robberies in the downtown district.</p>
+                        <a class="read-more" onclick="showSection('cases')">View Details →</a>
+                    </div>
+                    <div class="case-card">
+                        <div class="case-status solved">SOLVED</div>
+                        <h3>Operation Silent Night</h3>
+                        <p><strong>Closed:</strong> August 10, 2024</p>
+                        <p><strong>Description:</strong> Successfully identified and apprehended suspects in major fraud scheme.</p>
+                        <a class="read-more" onclick="showSection('cases')">View Details →</a>
+                    </div>
+                    <div class="case-card">
+                        <div class="case-status active">ACTIVE</div>
+                        <h3>Cyber Threat Investigation</h3>
+                        <p><strong>Opened:</strong> June 22, 2024</p>
+                        <p><strong>Description:</strong> Tracking digital threats and unauthorized system access attempts.</p>
+                        <a class="read-more" onclick="showSection('cases')">View Details →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Have Information About a Crime?</h2>
+                    <p>Submit your report anonymously and help us maintain public safety</p>
+                    <a onclick="showSection('report')" class="btn btn-primary btn-large">Submit Anonymous Report</a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Quick Stats -->
-    <section class="stats">
-        <div class="container">
-            <div class="stat-card">
-                <h3>Cases Active</h3>
-                <p class="stat-number">247</p>
+    <!-- CASES SECTION -->
+    <section id="cases">
+        <div class="page-header">
+            <div class="container">
+                <h1>Active & Solved Cases</h1>
+                <p>Browse through our case database</p>
             </div>
-            <div class="stat-card">
-                <h3>Cases Solved</h3>
-                <p class="stat-number">1,893</p>
+        </div>
+
+        <div class="filter-section">
+            <div class="container">
+                <div class="filter-controls">
+                    <input type="text" id="searchInput" placeholder="Search cases..." class="search-box">
+                    <select id="statusFilter" class="filter-select">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="solved">Solved</option>
+                        <option value="cold">Cold Case</option>
+                    </select>
+                </div>
             </div>
-            <div class="stat-card">
-                <h3>Reports Received</h3>
-                <p class="stat-number">5,642</p>
-            </div>
-            <div class="stat-card">
-                <h3>Team Members</h3>
-                <p class="stat-number">156</p>
+        </div>
+
+        <div class="cases-section">
+            <div class="container">
+                <div id="casesList" class="cases-grid">
+                    <div class="case-card">
+                        <div class="case-status active">ACTIVE</div>
+                        <h3>The Downtown Heist</h3>
+                        <p><strong>Opened:</strong> January 15, 2024</p>
+                        <p><strong>Description:</strong> Investigating a series of coordinated robberies in the downtown district. Multiple jewelry stores and high-end boutiques have been targeted.</p>
+                        <p><strong>Last Update:</strong> August 25, 2024</p>
+                    </div>
+                    <div class="case-card">
+                        <div class="case-status solved">SOLVED</div>
+                        <h3>Operation Silent Night</h3>
+                        <p><strong>Closed:</strong> August 10, 2024</p>
+                        <p><strong>Description:</strong> Successfully identified and apprehended suspects in major fraud scheme affecting over 500 victims.</p>
+                        <p><strong>Result:</strong> All suspects arrested and charged</p>
+                    </div>
+                    <div class="case-card">
+                        <div class="case-status active">ACTIVE</div>
+                        <h3>Cyber Threat Investigation</h3>
+                        <p><strong>Opened:</strong> June 22, 2024</p>
+                        <p><strong>Description:</strong> Tracking digital threats and unauthorized system access attempts targeting local businesses.</p>
+                        <p><strong>Last Update:</strong> August 24, 2024</p>
+                    </div>
+                    <div class="case-card">
+                        <div class="case-status active">ACTIVE</div>
+                        <h3>Missing Person: Sarah Chen</h3>
+                        <p><strong>Opened:</strong> July 3, 2024</p>
+                        <p><strong>Description:</strong> Investigation into disappearance of 28-year-old from downtown area. Last seen wearing blue jacket.</p>
+                        <p><strong>Last Update:</strong> August 23, 2024</p>
+                    </div>
+                    <div class="case-card">
+                        <div class="case-status solved">SOLVED</div>
+                        <h3>Counter Smuggling Operation</h3>
+                        <p><strong>Closed:</strong> May 20, 2024</p>
+                        <p><strong>Description:</strong> Major breakthrough in international smuggling ring investigation.</p>
+                        <p><strong>Result:</strong> 12 suspects apprehended, significant contraband seized</p>
+                    </div>
+                    <div class="case-card">
+                        <div class="case-status cold">COLD CASE</div>
+                        <h3>The Patterson Mystery</h3>
+                        <p><strong>Opened:</strong> March 15, 2009</p>
+                        <p><strong>Description:</strong> Unsolved case seeking any new information or leads from the public.</p>
+                        <p><strong>Status:</strong> Tips welcome - Call 1-800-RBI-TIPS</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Featured Cases -->
-    <section class="featured-section">
-        <div class="container">
-            <h2>Featured Cases</h2>
-            <div class="cases-grid">
-                <div class="case-card">
-                    <div class="case-status active">ACTIVE</div>
-                    <h3>The Downtown Heist</h3>
-                    <p><strong>Opened:</strong> January 15, 2024</p>
-                    <p><strong>Description:</strong> Investigating a series of coordinated robberies in the downtown district.</p>
-                    <a href="cases.html" class="read-more">View Details →</a>
-                </div>
-                <div class="case-card">
-                    <div class="case-status solved">SOLVED</div>
-                    <h3>Operation Silent Night</h3>
-                    <p><strong>Closed:</strong> August 10, 2024</p>
-                    <p><strong>Description:</strong> Successfully identified and apprehended suspects in major fraud scheme.</p>
-                    <a href="cases.html" class="read-more">View Details →</a>
-                </div>
-                <div class="case-card">
-                    <div class="case-status active">ACTIVE</div>
-                    <h3>Cyber Threat Investigation</h3>
-                    <p><strong>Opened:</strong> June 22, 2024</p>
-                    <p><strong>Description:</strong> Tracking digital threats and unauthorized system access attempts.</p>
-                    <a href="cases.html" class="read-more">View Details →</a>
+    <!-- SUBMIT REPORT SECTION -->
+    <section id="report">
+        <div class="page-header">
+            <div class="container">
+                <h1>Submit a Report</h1>
+                <p>Your information helps us solve crimes and keep communities safe</p>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="container">
+                <div class="form-wrapper">
+                    <div class="form-info">
+                        <h3>Submit Anonymously</h3>
+                        <p>All information submitted through this form is treated confidentially. You can choose to remain anonymous or provide your contact information for follow-up.</p>
+                        <ul class="info-list">
+                            <li>✓ Confidential Reports</li>
+                            <li>✓ Anonymous Submissions</li>
+                            <li>✓ Secure Encryption</li>
+                            <li>✓ 24/7 Available</li>
+                        </ul>
+                    </div>
+
+                    <form id="reportForm" class="report-form">
+                        <!-- Personal Information -->
+                        <fieldset>
+                            <legend>Your Information (Optional)</legend>
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" placeholder="Leave blank to remain anonymous">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" placeholder="optional@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" placeholder="Optional">
+                            </div>
+                        </fieldset>
+
+                        <!-- Report Details -->
+                        <fieldset>
+                            <legend>Report Details</legend>
+                            <div class="form-group">
+                                <label for="category">Crime Category *</label>
+                                <select id="category" name="category" required>
+                                    <option value="">-- Select Category --</option>
+                                    <option value="theft">Theft/Robbery</option>
+                                    <option value="fraud">Fraud</option>
+                                    <option value="cybercrime">Cybercrime</option>
+                                    <option value="violence">Violence/Assault</option>
+                                    <option value="missing">Missing Person</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="date">Date of Incident *</label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="location">Location *</label>
+                                <input type="text" id="location" name="location" placeholder="Where did the incident occur?" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Description of Incident *</label>
+                                <textarea id="description" name="description" placeholder="Please provide detailed information about the incident..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="suspects">Suspect Information</label>
+                                <textarea id="suspects" name="suspects" placeholder="Describe any suspects (physical description, names, vehicles, etc.)"></textarea>
+                            </div>
+                        </fieldset>
+
+                        <!-- Verification -->
+                        <fieldset>
+                            <legend>Verification</legend>
+                            <div class="form-group checkbox">
+                                <input type="checkbox" id="confirm" name="confirm" required>
+                                <label for="confirm">I confirm that the information I have provided is truthful and accurate to the best of my knowledge</label>
+                            </div>
+                        </fieldset>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-large">Submit Report</button>
+                            <button type="reset" class="btn btn-secondary">Clear Form</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Call to Action -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Have Information About a Crime?</h2>
-                <p>Submit your report anonymously and help us maintain public safety</p>
-                <a href="submit-report.html" class="btn btn-primary btn-large">Submit Anonymous Report</a>
+    <!-- VIDEOS SECTION -->
+    <section id="videos">
+        <div class="page-header">
+            <div class="container">
+                <h1>RBI Videos</h1>
+                <p>Watch case documentaries, investigations, and updates</p>
+            </div>
+        </div>
+
+        <div class="channel-promo">
+            <div class="container">
+                <div class="promo-content">
+                    <h2>Subscribe to Our YouTube Channel</h2>
+                    <p>Don't miss updates on active cases, investigation documentaries, and public safety announcements</p>
+                    <a href="https://youtube.com" target="_blank" class="btn btn-primary btn-large">▶ Visit YouTube Channel</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="videos-section">
+            <div class="container">
+                <h2>Featured Investigations</h2>
+                <div class="videos-grid">
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <iframe width="100%" height="220" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Operation Downtown Heist - Full Documentary</h3>
+                            <p>Join us as we uncover the investigation into a series of coordinated robberies that shocked the city.</p>
+                            <div class="video-meta">
+                                <span class="views">👁 45K views</span>
+                                <span class="date">📅 2 weeks ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <iframe width="100%" height="220" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Cybercrime Investigation Unit - Behind the Scenes</h3>
+                            <p>Get an exclusive look at how our cybercrime experts track and apprehend digital criminals.</p>
+                            <div class="video-meta">
+                                <span class="views">👁 32K views</span>
+                                <span class="date">📅 3 weeks ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <iframe width="100%" height="220" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Cold Case Breakthrough: Mystery Solved After 15 Years</h3>
+                            <p>Witness the emotional resolution as we finally solve a case that baffled investigators for over a decade.</p>
+                            <div class="video-meta">
+                                <span class="views">👁 78K views</span>
+                                <span class="date">📅 1 month ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <iframe width="100%" height="220" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>How to Report a Crime Safely - Public Guide</h3>
+                            <p>Learn the best practices for reporting suspicious activity and protecting yourself while gathering evidence.</p>
+                            <div class="video-meta">
+                                <span class="views">👁 56K views</span>
+                                <span class="date">📅 1 month ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <iframe width="100%" height="220" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Fraud Detection: Protecting Yourself Online</h3>
+                            <p>Expert tips on how to identify and avoid common online fraud schemes targeting innocent citizens.</p>
+                            <div class="video-meta">
+                                <span class="views">👁 41K views</span>
+                                <span class="date">📅 2 months ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <iframe width="100%" height="220" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h3>Meet the RBI Team - Welcome to Our Agency</h3>
+                            <p>An introduction to the dedicated professionals working tirelessly to keep our communities safe.</p>
+                            <div class="video-meta">
+                                <span class="views">👁 28K views</span>
+                                <span class="date">📅 2 months ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="playlist-section">
+            <div class="container">
+                <h2>Popular Playlists</h2>
+                <div class="playlists-grid">
+                    <div class="playlist-card">
+                        <div class="playlist-icon">📹</div>
+                        <h3>Case Documentaries</h3>
+                        <p>In-depth investigations and documentaries of our most complex cases</p>
+                        <a href="#">View Playlist →</a>
+                    </div>
+                    <div class="playlist-card">
+                        <div class="playlist-icon">🎓</div>
+                        <h3>Safety Education</h3>
+                        <p>Learn how to stay safe and protect yourself from common crimes</p>
+                        <a href="#">View Playlist →</a>
+                    </div>
+                    <div class="playlist-card">
+                        <div class="playlist-icon">🔔</div>
+                        <h3>Latest Updates</h3>
+                        <p>Stay informed with the latest news and developments from RBI</p>
+                        <a href="#">View Playlist →</a>
+                    </div>
+                    <div class="playlist-card">
+                        <div class="playlist-icon">👮</div>
+                        <h3>Behind the Scenes</h3>
+                        <p>Exclusive access to our operations and investigative techniques</p>
+                        <a href="#">View Playlist →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+        <div class="page-header">
+            <div class="container">
+                <h1>About RBI</h1>
+                <p>Learn about our mission and values</p>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <div class="container">
+                <div class="about-content">
+                    <h2>About the Rec Bureau of Investigation</h2>
+                    <p>The Rec Bureau of Investigation (RBI) is a dedicated law enforcement agency committed to maintaining public safety and delivering justice to our communities. With decades of combined experience, our team of highly trained investigators works tirelessly to solve complex cases and protect innocent citizens.</p>
+
+                    <h3>Our Mission</h3>
+                    <p>To serve the public with integrity, professionalism, and transparency by investigating crimes, solving cases, and providing resources to help keep our communities safe.</p>
+
+                    <h3>Our Core Values</h3>
+                    <div class="mission-values">
+                        <div class="value-card">
+                            <h4>🎯 Justice</h4>
+                            <p>We are committed to finding the truth and delivering justice for victims and their families.</p>
+                        </div>
+                        <div class="value-card">
+                            <h4>🛡️ Integrity</h4>
+                            <p>We conduct our investigations with honesty, ethical standards, and respect for the law.</p>
+                        </div>
+                        <div class="value-card">
+                            <h4>💪 Dedication</h4>
+                            <p>Our team is dedicated to solving cases and providing the highest level of service to our community.</p>
+                        </div>
+                        <div class="value-card">
+                            <h4>🤝 Transparency</h4>
+                            <p>We maintain open communication with the public and provide regular updates on active investigations.</p>
+                        </div>
+                    </div>
+
+                    <h3>Our Team</h3>
+                    <p>Our agency consists of 156 highly trained professionals including detectives, forensic specialists, cybercrime experts, and support staff. Each team member brings unique expertise and dedication to solving crimes and protecting public safety.</p>
+
+                    <h3>By The Numbers</h3>
+                    <div class="mission-values">
+                        <div class="value-card">
+                            <h4>247</h4>
+                            <p>Active Cases Under Investigation</p>
+                        </div>
+                        <div class="value-card">
+                            <h4>1,893</h4>
+                            <p>Cases Successfully Solved</p>
+                        </div>
+                        <div class="value-card">
+                            <h4>5,642</h4>
+                            <p>Reports Received & Processed</p>
+                        </div>
+                        <div class="value-card">
+                            <h4>156</h4>
+                            <p>Dedicated Team Members</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+        <div class="page-header">
+            <div class="container">
+                <h1>Contact Us</h1>
+                <p>Get in touch with the RBI</p>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <div class="container">
+                <div class="contact-wrapper">
+                    <div class="contact-info">
+                        <h2>Contact Information</h2>
+                        
+                        <div class="contact-item">
+                            <h3>📞 Phone</h3>
+                            <p><strong>Main Line:</strong> (555) 123-4567</p>
+                            <p><strong>Tip Line:</strong> 1-800-RBI-TIPS</p>
+                            <p><strong>Emergency:</strong> 911</p>
+                        </div>
+
+                        <div class="contact-item">
+                            <h3>📧 Email</h3>
+                            <p><strong>General:</strong> info@rbi.gov</p>
+                            <p><strong>Reports:</strong> reports@rbi.gov</p>
+                            <p><strong>Media:</strong> media@rbi.gov</p>
+                        </div>
+
+                        <div class="contact-item">
+                            <h3>🏢 Address</h3>
+                            <p>Rec Bureau of Investigation</p>
+                            <p>123 Justice Avenue</p>
+                            <p>Downtown District</p>
+                            <p>Investigative City, IC 12345</p>
+                        </div>
+
+                        <div class="contact-item">
+                            <h3>⏰ Hours</h3>
+                            <p><strong>Available:</strong> 24/7</p>
+                            <p><strong>Tip Line:</strong> Open 24/7</p>
+                            <p><strong>Walk-ins:</strong> 8 AM - 10 PM</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-section">
+                        <h2>Send us a Message</h2>
+                        <form id="contactForm">
+                            <input type="text" placeholder="Your Name" required>
+                            <input type="email" placeholder="Your Email" required>
+                            <input type="text" placeholder="Subject" required>
+                            <textarea placeholder="Your Message" rows="6" required></textarea>
+                            <button type="submit" class="btn btn-primary btn-large">Send Message</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -111,9 +1350,9 @@
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="cases.html">Cases</a></li>
-                        <li><a href="submit-report.html">Submit Report</a></li>
-                        <li><a href="videos.html">Videos</a></li>
+                        <li><a onclick="showSection('cases')">Cases</a></li>
+                        <li><a onclick="showSection('report')">Submit Report</a></li>
+                        <li><a onclick="showSection('videos')">Videos</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -127,9 +1366,9 @@
                 <div class="footer-section">
                     <h4>Follow Us</h4>
                     <ul>
-                        <li><a href="#youtube">YouTube</a></li>
-                        <li><a href="#twitter">Twitter</a></li>
-                        <li><a href="#facebook">Facebook</a></li>
+                        <li><a href="#">YouTube</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Facebook</a></li>
                     </ul>
                 </div>
             </div>
@@ -139,6 +1378,68 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Form submission handlers
+        document.getElementById('reportForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your report! It has been received and will be reviewed by our team. Reference ID: RBI-' + Math.random().toString(36).substr(2, 9).toUpperCase());
+            this.reset();
+        });
+
+        document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you as soon as possible.');
+            this.reset();
+        });
+
+        // Search and filter functionality
+        document.getElementById('searchInput')?.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const caseCards = document.querySelectorAll('#casesList .case-card');
+            
+            caseCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p:nth-of-type(2)').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        document.getElementById('statusFilter')?.addEventListener('change', function() {
+            const filterValue = this.value;
+            const caseCards = document.querySelectorAll('#casesList .case-card');
+            
+            caseCards.forEach(card => {
+                const status = card.querySelector('.case-status').textContent.toLowerCase();
+                
+                if (filterValue === 'all') {
+                    card.style.display = 'block';
+                } else if (status.includes(filterValue)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
