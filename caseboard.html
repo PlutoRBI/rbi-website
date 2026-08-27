@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBI Case Board - Rec Bureau of Investigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header */
+        .navbar {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .logo p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 2rem;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Sections */
+        section {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        h2 {
+            color: #1a237e;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #1a237e;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* Case Board */
+        .board-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .board-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .board-section h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .case-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #4ecdc4;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #45b7aa;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ee5a52;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        /* Evidence Items */
+        .evidence-item {
+            background: #fff9e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ffa500;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .evidence-content {
+            flex: 1;
+        }
+
+        .evidence-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .evidence-desc {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .evidence-meta {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        /* Testimony Items */
+        .testimony-item {
+            background: #e7f5ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1971c2;
+        }
+
+        .testimony-title {
+            font-weight: 600;
+            color: #1971c2;
+            margin-bottom: 8px;
+        }
+
+        .testimony-text {
+            color: #333;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        .testimony-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Suspect/Person Items */
+        .person-card {
+            background: #f3f0ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #7950f2;
+        }
+
+        .person-name {
+            font-weight: 600;
+            color: #7950f2;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .person-info {
+            color: #333;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .person-role {
+            display: inline-block;
+            background: #7950f2;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Connections */
+        .connections-container {
+            background: white;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            min-height: 400px;
+        }
+
+        .connection-node {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: grab;
+            user-select: none;
+            position: relative;
+            display: inline-block;
+            min-width: 200px;
+        }
+
+        .connection-node:active {
+            cursor: grabbing;
+        }
+
+        .connection-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .connection-content {
+            font-size: 0.9rem;
+            opacity: 0.95;
+        }
+
+        /* Canvas for connections */
+        #connectionCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .timeline-marker {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            width: 2px;
+            height: calc(100% + 10px);
+            background: #667eea;
+        }
+
+        .timeline-item:last-child .timeline-line {
+            display: none;
+        }
+
+        .timeline-content {
+            margin-left: 40px;
+            flex: 1;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: #1a237e;
+            margin-bottom: 5px;
+        }
+
+        .timeline-desc {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        /* Document Generator */
+        .document-preview {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 40px;
+            border-radius: 8px;
+            margin: 20px 0;
+            line-height: 1.6;
+            color: #000;
+        }
+
+        .doc-header {
+            text-align: center;
+            border-bottom: 3px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .doc-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .doc-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .doc-meta {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .doc-section {
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+
+        .doc-section-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 15px 0 10px 0;
+            text-decoration: underline;
+        }
+
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .doc-table th,
+        .doc-table td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .doc-table th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #1a237e;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* Home Page */
+        .hero {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            color: white;
+            padding: 80px 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 10px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #667eea;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            font-weight: bold;
+            color: #1a237e;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .board-container {
+                grid-template-columns: 1fr;
+            }
+
+            .case-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar-container {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-links a {
+                margin-left: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .document-preview {
+                padding: 20px;
+            }
+        }
+
+        .list-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <h1>🔍 RBI</h1>
+                <p>Rec Bureau of Investigation - Case Management System</p>
+            </div>
+            <div class="nav-links">
+                <a onclick="showSection('home')">Home</a>
+                <a onclick="showSection('caseboard')">Case Board</a>
+                <a onclick="showSection('evidence')">Evidence</a>
+                <a onclick="showSection('testimony')">Testimony</a>
+                <a onclick="showSection('timeline')">Timeline</a>
+                <a onclick="showSection('documents')">Documents</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- HOME SECTION -->
+        <section id="home" class="active">
+            <div class="hero">
+                <h1>🔍 RBI Case Management System</h1>
+                <p>Rec Bureau of Investigation - Advanced Investigation Platform</p>
+            </div>
+
+            <h2>Welcome to the RBI Case Board</h2>
+            <p>An advanced case management system designed for law enforcement professionals. Organize evidence, manage testimony, track suspects, and generate official documents.</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="caseCount">0</div>
+                    <div class="stat-label">Active Cases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="evidenceCount">0</div>
+                    <div class="stat-label">Evidence Items</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="testimoniesCount">0</div>
+                    <div class="stat-label">Testimonies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="suspectsCount">0</div>
+                    <div class="stat-label">Suspects/Persons</div>
+                </div>
+            </div>
+
+            <h3>Key Features</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">Case Board</div>
+                    <div class="feature-desc">Organize case information, suspects, and key details in one centralized location.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔎</div>
+                    <div class="feature-title">Evidence Management</div>
+                    <div class="feature-desc">Track and catalog all evidence with descriptions, dates, and relationships to cases.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-title">Testimony Records</div>
+                    <div class="feature-desc">Document witness and suspect testimonies with timestamps and metadata.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Timeline View</div>
+                    <div class="feature-desc">Visualize events and evidence in chronological order for better case analysis.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <div class="feature-title">Document Generator</div>
+                    <div class="feature-desc">Generate professional investigation reports and case summaries for court.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🕸️</div>
+                    <div class="feature-title">Connection Mapping</div>
+                    <div class="feature-desc">Visually connect suspects, evidence, and testimonies to uncover relationships.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CASE BOARD SECTION -->
+        <section id="caseboard">
+            <h2>📋 Case Board</h2>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('view-case', this)">View Case</button>
+                <button class="tab" onclick="switchTab('new-case', this)">New Case</button>
+            </div>
+
+            <!-- View Case Tab -->
+            <div id="view-case" class="tab-content active">
+                <div class="form-group">
+                    <label>Select Case:</label>
+                    <select id="caseSelect" onchange="loadCase()">
+                        <option value="">-- Load a Case --</option>
+                    </select>
+                </div>
+
+                <div id="caseDisplay" style="display: none;">
+                    <div class="board-container">
+                        <div class="board-section">
+                            <h3>📌 Case Information</h3>
+                            <div class="case-info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Case Number</div>
+                                    <div class="info-value" id="displayCaseNum">-</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Status</div>
+                                    <div class="info-value" id="displayStatus">-</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Opened</div>
+                                    <div class="info-value" id="displayOpened">-</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Lead Investigator</div>
+                                    <div class="info-value" id="displayInvestigator">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="board-section">
+                            <h3>📝 Description</h3>
+                            <p id="displayDescription" style="color: #666; line-height: 1.6;">-</p>
+                        </div>
+                    </div>
+
+                    <div class="board-section">
+                        <h3>👥 Suspects & Persons of Interest</h3>
+                        <div id="displaySuspects">No suspects added yet.</div>
+                    </div>
+
+                    <div class="board-section">
+                        <h3>🔗 Connections</h3>
+                        <div class="connections-container" id="connectionCanvas">
+                            <canvas id="canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Case Tab -->
+            <div id="new-case" class="tab-content">
+                <h3>Create New Case</h3>
+                <div class="form-group">
+                    <label>Case Number:</label>
+                    <input type="text" id="newCaseNum" placeholder="e.g., RBI-2024-001">
+                </div>
+                <div class="form-group">
+                    <label>Case Title:</label>
+                    <input type="text" id="newCaseTitle" placeholder="Brief case title">
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea id="newCaseDesc" placeholder="Detailed case description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Lead Investigator:</label>
+                    <input type="text" id="newInvestigator" placeholder="Name of lead investigator">
+                </div>
+                <div class="form-group">
+                    <label>Status:</label>
+                    <select id="newCaseStatus">
+                        <option value="active">Active</option>
+                        <option value="pending">Pending</option>
+                        <option value="cold">Cold Case</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="createCase()">Create Case</button>
+            </div>
+        </section>
+
+        <!-- EVIDENCE SECTION -->
+        <section id="evidence">
+            <h2>🔎 Evidence Management</h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('add-evidence', this)">Add Evidence</button>
+                <button class="tab" onclick="switchTab('view-evidence', this)">View Evidence</button>
+            </div>
+
+            <!-- Add Evidence Tab -->
+            <div id="add-evidence" class="tab-content active">
+                <h3>Add New Evidence</h3>
+                <div class="form-group">
+                    <label>Related Case:</label>
+                    <select id="evidenceCase">
+                        <option value="">-- Select Case --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Evidence ID:</label>
+                    <input type="text" id="evidenceID" placeholder="e.g., EV-001">
+                </div>
+                <div class="form-group">
+                    <label>Evidence Type:</label>
+                    <select id="evidenceType">
+                        <option value="physical">Physical Evidence</option>
+                        <option value="digital">Digital Evidence</option>
+                        <option value="document">Document</option>
+                        <option value="photo">Photograph</option>
+                        <option value="video">Video</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea id="evidenceDesc" placeholder="Detailed description of the evidence..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Date Found:</label>
+                    <input type="date" id="evidenceDate">
+                </div>
+                <div class="form-group">
+                    <label>Location Found:</label>
+                    <input type="text" id="evidenceLocation" placeholder="Where was this evidence found?">
+                </div>
+                <div class="form-group">
+                    <label>Chain of Custody:</label>
+                    <textarea id="evidenceCustody" placeholder="Document chain of custody details..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="addEvidence()">Add Evidence</button>
+            </div>
+
+            <!-- View Evidence Tab -->
+            <div id="view-evidence" class="tab-content">
+                <h3>Evidence Log</h3>
+                <div id="evidenceList"></div>
+            </div>
+        </section>
+
+        <!-- TESTIMONY SECTION -->
+        <section id="testimony">
+            <h2>💬 Testimony Records</h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('add-testimony', this)">Record Testimony</button>
+                <button class="tab" onclick="switchTab('view-testimony', this)">View Testimony</button>
+            </div>
+
+            <!-- Add Testimony Tab -->
+            <div id="add-testimony" class="tab-content active">
+                <h3>Record New Testimony</h3>
+                <div class="form-group">
+                    <label>Related Case:</label>
+                    <select id="testimonyCase">
+                        <option value="">-- Select Case --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Witness/Suspect Name:</label>
+                    <input type="text" id="testimonyName" placeholder="Full name">
+                </div>
+                <div class="form-group">
+                    <label>Role:</label>
+                    <select id="testimonyRole">
+                        <option value="witness">Witness</option>
+                        <option value="suspect">Suspect</option>
+                        <option value="victim">Victim</option>
+                        <option value="informant">Informant</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date of Testimony:</label>
+                    <input type="date" id="testimonyDate">
+                </div>
+                <div class="form-group">
+                    <label>Location:</label>
+                    <input type="text" id="testimonyLocation" placeholder="Where was testimony given?">
+                </div>
+                <div class="form-group">
+                    <label>Testimony Text:</label>
+                    <textarea id="testimonyText" placeholder="Full testimony transcript..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Investigator Notes:</label>
+                    <textarea id="testimonyNotes" placeholder="Your observations and notes..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="addTestimony()">Record Testimony</button>
+            </div>
+
+            <!-- View Testimony Tab -->
+            <div id="view-testimony" class="tab-content">
+                <h3>Testimony Records</h3>
+                <div id="testimonyList"></div>
+            </div>
+        </section>
+
+        <!-- TIMELINE SECTION -->
+        <section id="timeline">
+            <h2>📊 Case Timeline</h2>
+
+            <div class="form-group">
+                <label>Select Case:</label>
+                <select id="timelineCase" onchange="loadTimeline()">
+                    <option value="">-- Select Case --</option>
+                </select>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('timeline-view', this)">Timeline</button>
+                <button class="tab" onclick="switchTab('add-event', this)">Add Event</button>
+            </div>
+
+            <!-- Timeline View -->
+            <div id="timeline-view" class="tab-content active">
+                <div id="timelineDisplay" class="timeline"></div>
+            </div>
+
+            <!-- Add Event -->
+            <div id="add-event" class="tab-content">
+                <h3>Add Timeline Event</h3>
+                <div class="form-group">
+                    <label>Event Date & Time:</label>
+                    <input type="datetime-local" id="eventDateTime">
+                </div>
+                <div class="form-group">
+                    <label>Event Type:</label>
+                    <select id="eventType">
+                        <option value="evidence">Evidence Found</option>
+                        <option value="testimony">Testimony Recorded</option>
+                        <option value="investigation">Investigation Update</option>
+                        <option value="arrest">Arrest</option>
+                        <option value="discovery">Discovery</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea id="eventDesc" placeholder="Describe the event..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="addTimelineEvent()">Add Event</button>
+            </div>
+        </section>
+
+        <!-- DOCUMENTS SECTION -->
+        <section id="documents">
+            <h2>📄 Document Generator</h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('gen-report', this)">Generate Report</button>
+                <button class="tab" onclick="switchTab('doc-preview', this)">Preview</button>
+            </div>
+
+            <!-- Generate Report Tab -->
+            <div id="gen-report" class="tab-content active">
+                <h3>Generate Investigation Report</h3>
+                <div class="form-group">
+                    <label>Select Case:</label>
+                    <select id="reportCase" onchange="populateReportPreview()">
+                        <option value="">-- Select Case --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Report Type:</label>
+                    <select id="reportType" onchange="populateReportPreview()">
+                        <option value="summary">Case Summary</option>
+                        <option value="investigation">Investigation Report</option>
+                        <option value="evidence">Evidence Report</option>
+                        <option value="testimony">Testimony Compilation</option>
+                        <option value="full">Full Case Report</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Report Title:</label>
+                    <input type="text" id="reportTitle" placeholder="e.g., Investigation Summary - Case RBI-2024-001">
+                </div>
+                <div class="form-group">
+                    <label>Prepared By:</label>
+                    <input type="text" id="reportPreparedBy" placeholder="Investigator name">
+                </div>
+                <div class="form-group">
+                    <label>Additional Notes:</label>
+                    <textarea id="reportNotes" placeholder="Add any additional notes to include in the report..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="populateReportPreview()">Generate Preview</button>
+                <button class="btn btn-secondary" onclick="printReport()" style="margin-left: 10px;">🖨️ Print</button>
+                <button class="btn btn-secondary" onclick="downloadPDF()" style="margin-left: 10px;">📥 Download PDF</button>
+            </div>
+
+            <!-- Preview Tab -->
+            <div id="doc-preview" class="tab-content">
+                <div id="reportPreview" class="document-preview">
+                    <p style="text-align: center; color: #999;">Select a case and click "Generate Preview" to see the report.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Data Storage
+        let cases = [];
+        let evidence = [];
+        let testimonies = [];
+        let timelineEvents = [];
+
+        // Initialize
+        function init() {
+            loadFromLocalStorage();
+            updateAllStats();
+            populateCaseSelects();
+        }
+
+        // Local Storage
+        function saveToLocalStorage() {
+            localStorage.setItem('rbiCases', JSON.stringify(cases));
+            localStorage.setItem('rbiEvidence', JSON.stringify(evidence));
+            localStorage.setItem('rbiTestimonies', JSON.stringify(testimonies));
+            localStorage.setItem('rbiTimeline', JSON.stringify(timelineEvents));
+        }
+
+        function loadFromLocalStorage() {
+            cases = JSON.parse(localStorage.getItem('rbiCases')) || [];
+            evidence = JSON.parse(localStorage.getItem('rbiEvidence')) || [];
+            testimonies = JSON.parse(localStorage.getItem('rbiTestimonies')) || [];
+            timelineEvents = JSON.parse(localStorage.getItem('rbiTimeline')) || [];
+        }
+
+        // Section Management
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function switchTab(tabId, button) {
+            const parent = button.parentElement;
+            parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            button.classList.add('active');
+
+            const content = parent.parentElement;
+            content.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            content.querySelector(`#${tabId}`).classList.add('active');
+        }
+
+        // Statistics
+        function updateAllStats() {
+            document.getElementById('caseCount').textContent = cases.length;
+            document.getElementById('evidenceCount').textContent = evidence.length;
+            document.getElementById('testimoniesCount').textContent = testimonies.length;
+            document.getElementById('suspectsCount').textContent = cases.reduce((sum, c) => sum + (c.suspects || []).length, 0);
+        }
+
+        // Case Management
+        function createCase() {
+            const caseNum = document.getElementById('newCaseNum').value.trim();
+            const title = document.getElementById('newCaseTitle').value.trim();
+            const desc = document.getElementById('newCaseDesc').value.trim();
+            const investigator = document.getElementById('newInvestigator').value.trim();
+            const status = document.getElementById('newCaseStatus').value;
+
+            if (!caseNum || !title || !desc || !investigator) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const newCase = {
+                id: Date.now(),
+                number: caseNum,
+                title: title,
+                description: desc,
+                investigator: investigator,
+                status: status,
+                opened: new Date().toISOString().split('T')[0],
+                suspects: []
+            };
+
+            cases.push(newCase);
+            saveToLocalStorage();
+            updateAllStats();
+            populateCaseSelects();
+
+            // Clear form
+            document.getElementById('newCaseNum').value = '';
+            document.getElementById('newCaseTitle').value = '';
+            document.getElementById('newCaseDesc').value = '';
+            document.getElementById('newInvestigator').value = '';
+
+            alert('Case created successfully!');
+        }
+
+        function populateCaseSelects() {
+            const selects = ['caseSelect', 'evidenceCase', 'testimonyCase', 'timelineCase', 'reportCase'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (!select) return;
+                const current = select.value;
+                select.innerHTML = '<option value="">-- Select Case --</option>';
+                cases.forEach(c => {
+                    const option = document.createElement('option');
+                    option.value = c.id;
+                    option.textContent = `${c.number} - ${c.title}`;
+                    select.appendChild(option);
+                });
+                select.value = current;
+            });
+        }
+
+        function loadCase() {
+            const caseId = parseInt(document.getElementById('caseSelect').value);
+            if (!caseId) return;
+
+            const caseData = cases.find(c => c.id === caseId);
+            if (!caseData) return;
+
+            document.getElementById('displayCaseNum').textContent = caseData.number;
+            document.getElementById('displayStatus').textContent = `<span class="badge badge-${caseData.status === 'active' ? 'success' : caseData.status === 'closed' ? 'danger' : 'warning'}">${caseData.status.toUpperCase()}</span>`;
+            document.getElementById('displayStatus').innerHTML = `<span class="badge badge-${caseData.status === 'active' ? 'success' : caseData.status === 'closed' ? 'danger' : 'warning'}">${caseData.status.toUpperCase()}</span>`;
+            document.getElementById('displayOpened').textContent = caseData.opened;
+            document.getElementById('displayInvestigator').textContent = caseData.investigator;
+            document.getElementById('displayDescription').textContent = caseData.description;
+
+            // Display suspects
+            const suspectsDiv = document.getElementById('displaySuspects');
+            if (caseData.suspects && caseData.suspects.length > 0) {
+                suspectsDiv.innerHTML = caseData.suspects.map(s => `
+                    <div class="person-card">
+                        <div class="person-name">${s.name}</div>
+                        <div class="person-info"><strong>Role:</strong> ${s.role}</div>
+                        <div class="person-info"><strong>Contact:</strong> ${s.contact}</div>
+                        <div><span class="person-role">${s.role.toUpperCase()}</span></div>
+                    </div>
+                `).join('');
+            } else {
+                suspectsDiv.innerHTML = '<p>No suspects/persons of interest added yet.</p>';
+            }
+
+            document.getElementById('caseDisplay').style.display = 'block';
+        }
+
+        // Evidence Management
+        function addEvidence() {
+            const caseId = parseInt(document.getElementById('evidenceCase').value);
+            const evidID = document.getElementById('evidenceID').value.trim();
+            const type = document.getElementById('evidenceType').value;
+            const desc = document.getElementById('evidenceDesc').value.trim();
+            const date = document.getElementById('evidenceDate').value;
+            const location = document.getElementById('evidenceLocation').value.trim();
+            const custody = document.getElementById('evidenceCustody').value.trim();
+
+            if (!caseId || !evidID || !desc || !date) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const newEvidence = {
+                id: Date.now(),
+                caseId: caseId,
+                evidID: evidID,
+                type: type,
+                description: desc,
+                datFound: date,
+                location: location,
+                custody: custody
+            };
+
+            evidence.push(newEvidence);
+            saveToLocalStorage();
+            updateAllStats();
+
+            document.getElementById('evidenceID').value = '';
+            document.getElementById('evidenceDesc').value = '';
+            document.getElementById('evidenceDate').value = '';
+            document.getElementById('evidenceLocation').value = '';
+            document.getElementById('evidenceCustody').value = '';
+
+            alert('Evidence added successfully!');
+            renderEvidenceList();
+        }
+
+        function renderEvidenceList() {
+            const list = document.getElementById('evidenceList');
+            if (evidence.length === 0) {
+                list.innerHTML = '<p>No evidence recorded yet.</p>';
+                return;
+            }
+
+            list.innerHTML = evidence.map(e => {
+                const caseData = cases.find(c => c.id === e.caseId);
+                return `
+                    <div class="evidence-item">
+                        <div class="evidence-content">
+                            <div class="evidence-title">${e.evidID} - ${e.type.toUpperCase()}</div>
+                            <div class="evidence-desc">${e.description}</div>
+                            <div class="evidence-meta">
+                                Found: ${e.datFound} | Location: ${e.location}
+                                ${caseData ? ` | Case: ${caseData.number}` : ''}
+                            </div>
+                        </div>
+                        <button class="btn btn-small btn-danger" onclick="deleteEvidence(${e.id})">Delete</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteEvidence(id) {
+            evidence = evidence.filter(e => e.id !== id);
+            saveToLocalStorage();
+            updateAllStats();
+            renderEvidenceList();
+        }
+
+        // Testimony Management
+        function addTestimony() {
+            const caseId = parseInt(document.getElementById('testimonyCase').value);
+            const name = document.getElementById('testimonyName').value.trim();
+            const role = document.getElementById('testimonyRole').value;
+            const date = document.getElementById('testimonyDate').value;
+            const location = document.getElementById('testimonyLocation').value.trim();
+            const text = document.getElementById('testimonyText').value.trim();
+            const notes = document.getElementById('testimonyNotes').value.trim();
+
+            if (!caseId || !name || !date || !text) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const newTestimony = {
+                id: Date.now(),
+                caseId: caseId,
+                name: name,
+                role: role,
+                date: date,
+                location: location,
+                text: text,
+                notes: notes,
+                recorded: new Date().toISOString()
+            };
+
+            testimonies.push(newTestimony);
+            saveToLocalStorage();
+            updateAllStats();
+
+            document.getElementById('testimonyName').value = '';
+            document.getElementById('testimonyText').value = '';
+            document.getElementById('testimonyDate').value = '';
+            document.getElementById('testimonyLocation').value = '';
+            document.getElementById('testimonyNotes').value = '';
+
+            alert('Testimony recorded successfully!');
+            renderTestimonyList();
+        }
+
+        function renderTestimonyList() {
+            const list = document.getElementById('testimonyList');
+            if (testimonies.length === 0) {
+                list.innerHTML = '<p>No testimonies recorded yet.</p>';
+                return;
+            }
+
+            list.innerHTML = testimonies.map(t => {
+                const caseData = cases.find(c => c.id === t.caseId);
+                return `
+                    <div class="testimony-item">
+                        <div class="testimony-title">${t.name} (${t.role.toUpperCase()})</div>
+                        <div class="testimony-text">"${t.text.substring(0, 200)}${t.text.length > 200 ? '...' : ''}"</div>
+                        <div class="testimony-meta">
+                            Date: ${t.date} | Location: ${t.location}
+                            ${caseData ? ` | Case: ${caseData.number}` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Timeline Management
+        function loadTimeline() {
+            const caseId = parseInt(document.getElementById('timelineCase').value);
+            if (!caseId) return;
+
+            const caseEvents = timelineEvents.filter(e => e.caseId === caseId)
+                .sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+
+            const display = document.getElementById('timelineDisplay');
+            if (caseEvents.length === 0) {
+                display.innerHTML = '<p>No timeline events for this case.</p>';
+                return;
+            }
+
+            display.innerHTML = caseEvents.map((e, i) => `
+                <div class="timeline-item">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-marker">${i + 1}</div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">${e.dateTime}</div>
+                        <div class="timeline-desc"><strong>${e.type}:</strong> ${e.description}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addTimelineEvent() {
+            const caseId = parseInt(document.getElementById('timelineCase').value);
+            const dateTime = document.getElementById('eventDateTime').value;
+            const type = document.getElementById('eventType').value;
+            const desc = document.getElementById('eventDesc').value.trim();
+
+            if (!caseId || !dateTime || !desc) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const newEvent = {
+                id: Date.now(),
+                caseId: caseId,
+                dateTime: dateTime,
+                type: type,
+                description: desc
+            };
+
+            timelineEvents.push(newEvent);
+            saveToLocalStorage();
+
+            document.getElementById('eventDateTime').value = '';
+            document.getElementById('eventDesc').value = '';
+
+            alert('Event added to timeline!');
+            loadTimeline();
+        }
+
+        // Document Generation
+        function populateReportPreview() {
+            const caseId = parseInt(document.getElementById('reportCase').value);
+            const reportType = document.getElementById('reportType').value;
+            const reportTitle = document.getElementById('reportTitle').value;
+            const preparedBy = document.getElementById('reportPreparedBy').value;
+            const notes = document.getElementById('reportNotes').value;
+
+            if (!caseId) {
+                document.getElementById('reportPreview').innerHTML = '<p style="text-align: center; color: #999;">Select a case to generate preview.</p>';
+                return;
+            }
+
+            const caseData = cases.find(c => c.id === caseId);
+            const caseEvidence = evidence.filter(e => e.caseId === caseId);
+            const caseTestimonies = testimonies.filter(t => t.caseId === caseId);
+
+            let html = `
+                <div class="doc-header">
+                    <div class="doc-title">RBI OFFICIAL INVESTIGATION REPORT</div>
+                    <div class="doc-subtitle">${reportTitle || 'Case Investigation Report'}</div>
+                    <div class="doc-meta">
+                        Rec Bureau of Investigation<br>
+                        Report Date: ${new Date().toLocaleDateString()}<br>
+                        Prepared By: ${preparedBy || 'Unknown'}
+                    </div>
+                </div>
+            `;
+
+            html += `
+                <div class="doc-section">
+                    <div class="doc-section-title">CASE INFORMATION</div>
+                    <table class="doc-table">
+                        <tr><th>Case Number</th><td>${caseData.number}</td></tr>
+                        <tr><th>Case Title</th><td>${caseData.title}</td></tr>
+                        <tr><th>Status</th><td>${caseData.status.toUpperCase()}</td></tr>
+                        <tr><th>Lead Investigator</th><td>${caseData.investigator}</td></tr>
+                        <tr><th>Date Opened</th><td>${caseData.opened}</td></tr>
+                    </table>
+                </div>
+            `;
+
+            if (reportType === 'summary' || reportType === 'full') {
+                html += `
+                    <div class="doc-section">
+                        <div class="doc-section-title">CASE SUMMARY</div>
+                        <p>${caseData.description}</p>
+                    </div>
+                `;
+            }
+
+            if ((reportType === 'evidence' || reportType === 'full') && caseEvidence.length > 0) {
+                html += `
+                    <div class="doc-section">
+                        <div class="doc-section-title">EVIDENCE LOG</div>
+                        <table class="doc-table">
+                            <thead>
+                                <tr>
+                                    <th>Evidence ID</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Date Found</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${caseEvidence.map(e => `
+                                    <tr>
+                                        <td>${e.evidID}</td>
+                                        <td>${e.type}</td>
+                                        <td>${e.description.substring(0, 50)}...</td>
+                                        <td>${e.datFound}</td>
+                                        <td>${e.location}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            if ((reportType === 'testimony' || reportType === 'full') && caseTestimonies.length > 0) {
+                html += `
+                    <div class="doc-section">
+                        <div class="doc-section-title">TESTIMONY RECORDS</div>
+                        ${caseTestimonies.map(t => `
+                            <div style="margin-bottom: 20px; page-break-inside: avoid;">
+                                <p><strong>Witness:</strong> ${t.name} (${t.role})</p>
+                                <p><strong>Date:</strong> ${t.date} | <strong>Location:</strong> ${t.location}</p>
+                                <p><strong>Statement:</strong></p>
+                                <p style="font-style: italic; margin-left: 20px;">"${t.text}"</p>
+                                ${t.notes ? `<p><strong>Investigator Notes:</strong> ${t.notes}</p>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            if (notes) {
+                html += `
+                    <div class="doc-section">
+                        <div class="doc-section-title">ADDITIONAL NOTES</div>
+                        <p>${notes}</p>
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="doc-section" style="margin-top: 40px; text-align: center; border-top: 2px solid #000; padding-top: 20px;">
+                    <p>____________________________</p>
+                    <p>Lead Investigator Signature</p>
+                    <p>${preparedBy || 'Unknown'}</p>
+                    <p>${new Date().toLocaleDateString()}</p>
+                </div>
+            `;
+
+            document.getElementById('reportPreview').innerHTML = html;
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('reportPreview');
+            const opt = {
+                margin: 10,
+                filename: 'RBI_Investigation_Report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+            alert('PDF download would require html2pdf library. For now, use Print function and save as PDF from browser.');
+        }
+
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
