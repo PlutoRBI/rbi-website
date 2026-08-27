@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Report - RBI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>🔍 RBI</h1>
+                <p>Rec Bureau of Investigation</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="cases.html">Cases</a></li>
+                <li><a href="submit-report.html">Submit Report</a></li>
+                <li><a href="videos.html">Videos</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Submit a Report</h1>
+            <p>Your information helps us solve crimes and keep communities safe</p>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="form-section">
+        <div class="container">
+            <div class="form-wrapper">
+                <div class="form-info">
+                    <h3>Submit Anonymously</h3>
+                    <p>All information submitted through this form is treated confidentially. You can choose to remain anonymous or provide your contact information for follow-up.</p>
+                    <ul class="info-list">
+                        <li>✓ Confidential Reports</li>
+                        <li>✓ Anonymous Submissions</li>
+                        <li>✓ Secure Encryption</li>
+                        <li>✓ 24/7 Available</li>
+                    </ul>
+                </div>
+
+                <form id="reportForm" class="report-form">
+                    <!-- Personal Information -->
+                    <fieldset>
+                        <legend>Your Information (Optional)</legend>
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="Leave blank to remain anonymous">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="optional@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Optional">
+                        </div>
+                    </fieldset>
+
+                    <!-- Report Details -->
+                    <fieldset>
+                        <legend>Report Details</legend>
+                        <div class="form-group">
+                            <label for="category">Crime Category *</label>
+                            <select id="category" name="category" required>
+                                <option value="">-- Select Category --</option>
+                                <option value="theft">Theft/Robbery</option>
+                                <option value="fraud">Fraud</option>
+                                <option value="cybercrime">Cybercrime</option>
+                                <option value="violence">Violence/Assault</option>
+                                <option value="missing">Missing Person</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date">Date of Incident *</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Location *</label>
+                            <input type="text" id="location" name="location" placeholder="Where did the incident occur?" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description of Incident *</label>
+                            <textarea id="description" name="description" rows="8" placeholder="Please provide detailed information about the incident..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="suspects">Suspect Information</label>
+                            <textarea id="suspects" name="suspects" rows="4" placeholder="Describe any suspects (physical description, names, vehicles, etc.)"></textarea>
+                        </div>
+                    </fieldset>
+
+                    <!-- Evidence -->
+                    <fieldset>
+                        <legend>Evidence/Attachments</legend>
+                        <div class="form-group">
+                            <label for="files">Upload Files (Images, Documents, etc.)</label>
+                            <input type="file" id="files" name="files" multiple accept="image/*,.pdf,.doc,.docx">
+                            <small>Max 10MB per file. Accepted: Images, PDF, DOC</small>
+                        </div>
+                    </fieldset>
+
+                    <!-- Verification -->
+                    <fieldset>
+                        <legend>Verification</legend>
+                        <div class="form-group checkbox">
+                            <input type="checkbox" id="confirm" name="confirm" required>
+                            <label for="confirm">I confirm that the information I have provided is truthful and accurate to the best of my knowledge</label>
+                        </div>
+                    </fieldset>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">Submit Report</button>
+                        <button type="reset" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>RBI</h4>
+                    <p>Rec Bureau of Investigation<br>Dedicated to Justice & Public Safety</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="cases.html">Cases</a></li>
+                        <li><a href="submit-report.html">Submit Report</a></li>
+                        <li><a href="videos.html">Videos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>Email: info@rbi.gov</li>
+                        <li>Phone: 1-800-RBI-TIPS</li>
+                        <li>Hours: 24/7</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <ul>
+                        <li><a href="#youtube">YouTube</a></li>
+                        <li><a href="#twitter">Twitter</a></li>
+                        <li><a href="#facebook">Facebook</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Rec Bureau of Investigation. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="form.js"></script>
+</body>
+</html>
